@@ -5,9 +5,10 @@ import type {
   PropsWithChildren,
   ReactNode,
 } from "react";
+import type { SelectOption } from "react95/dist/Select/Select.types";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   forwardRef,
   useCallback,
@@ -17,19 +18,21 @@ import {
 } from "react";
 import {
   Button,
+  Select,
   Window as React95Window,
   WindowContent,
   WindowHeader,
 } from "react95";
 import styled from "styled-components";
 
+import { themeAtom } from "~/lib/atom";
 import { setDragVisible } from "~/lib/set-drag-visible";
 import { useNullableState } from "~/lib/use-nullable-state";
 
 import {
   closeWindowAtom,
   isActiveWindowAtomFamily,
-  openWindowAtom,
+  openWindowAtom
 } from "./jotai";
 
 const CloseIcon = styled.span`
@@ -92,6 +95,28 @@ function CloseButton({ window }: CloseButtonProps): ReactNode {
   );
 }
 
+const themeOptions = [
+  { label: "Default", value: "dark" },
+  { label: "Black and white", value: "light" }
+];
+
+function SelectThemingButton(): ReactNode {
+  const [theme, setTheme] = useAtom(themeAtom);
+
+  const handleThemeChange = (selectedOption: SelectOption<string>): void => {
+    setTheme(selectedOption.value as "light" | "dark");
+    localStorage.setItem("theme", selectedOption.value); // Save to localStorage for persistence
+  };
+
+  return (
+    <Select
+      options={themeOptions}
+      onChange={handleThemeChange}
+      value={theme}
+    />
+  );
+}
+
 interface Rect {
   left: number;
   top: number;
@@ -114,9 +139,9 @@ const StyledWindow = styled(React95Window)`
 function getMaxSize(element: HTMLElement): Pick<Rect, "width" | "height"> {
   return element.parentElement
     ? {
-        width: element.parentElement.clientWidth,
-        height: element.parentElement.clientHeight,
-      }
+      width: element.parentElement.clientWidth,
+      height: element.parentElement.clientHeight,
+    }
     : { width: innerWidth, height: innerHeight };
 }
 
@@ -197,29 +222,29 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       setRect(
         anchor.isResize
           ? {
-              left: anchor.left,
-              top: anchor.top,
-              width: Math.min(
-                Math.max(anchor.width + event.clientX, 100),
-                maxSize.width - anchor.left,
-              ),
-              height: Math.min(
-                Math.max(anchor.height + event.clientY, 100),
-                maxSize.height - anchor.top,
-              ),
-            }
+            left: anchor.left,
+            top: anchor.top,
+            width: Math.min(
+              Math.max(anchor.width + event.clientX, 100),
+              maxSize.width - anchor.left,
+            ),
+            height: Math.min(
+              Math.max(anchor.height + event.clientY, 100),
+              maxSize.height - anchor.top,
+            ),
+          }
           : {
-              left: Math.min(
-                Math.max(anchor.left + event.clientX, 0),
-                maxSize.width - anchor.width,
-              ),
-              top: Math.min(
-                Math.max(anchor.top + event.clientY, 0),
-                maxSize.height - anchor.height,
-              ),
-              width: anchor.width,
-              height: anchor.height,
-            },
+            left: Math.min(
+              Math.max(anchor.left + event.clientX, 0),
+              maxSize.width - anchor.width,
+            ),
+            top: Math.min(
+              Math.max(anchor.top + event.clientY, 0),
+              maxSize.height - anchor.height,
+            ),
+            width: anchor.width,
+            height: anchor.height,
+          },
       );
     };
     const handlePointerUp = (event: PointerEvent): void => {
@@ -270,40 +295,44 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
   );
   const isActive = useAtomValue(isActiveWindowAtomFamily(window));
   return (
-    <StyledWindow
-      ref={ref}
-      resizeRef={resizeRef}
-      style={{
-        zIndex: isActive ? 1 : 0,
-        ...(rect ?? {
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          width: defaultWidth ? "100%" : "auto",
-          maxWidth: defaultWidth ?? "100%",
-          height: defaultHeight ? "100%" : "auto",
-          maxHeight: defaultHeight ?? "100%",
-        }),
-      }}
-      resizable
-      onPointerDown={handlePointerDown}
-    >
-      <WindowHeader
-        active={isActive}
-        css="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: default;"
-        onPointerDown={handleWindowHeaderPointerDown}
+    <>
+      <SelectThemingButton />
+      <StyledWindow
+        ref={ref}
+        resizeRef={resizeRef}
+        style={{
+          zIndex: isActive ? 1 : 0,
+          ...(rect ?? {
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: defaultWidth ? "100%" : "auto",
+            maxWidth: defaultWidth ?? "100%",
+            height: defaultHeight ? "100%" : "auto",
+            maxHeight: defaultHeight ?? "100%",
+          }),
+        }}
+        resizable
+        onPointerDown={handlePointerDown}
       >
-        <span css="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-right: 4px;">
-          {window}
-        </span>
-        <CloseButton window={window} />
-      </WindowHeader>
-      <WindowContent
-        className={className}
-        css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
-      >
-        {children}
-      </WindowContent>
-    </StyledWindow>
+
+        <WindowHeader
+          active={isActive}
+          css="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: default;"
+          onPointerDown={handleWindowHeaderPointerDown}
+        >
+          <span css="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-right: 4px;">
+            {window}
+          </span>
+          <CloseButton window={window} />
+        </WindowHeader>
+        <WindowContent
+          className={className}
+          css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
+        >
+          {children}
+        </WindowContent>
+      </StyledWindow>
+    </>
   );
 });
