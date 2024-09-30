@@ -295,44 +295,44 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
   );
   const isActive = useAtomValue(isActiveWindowAtomFamily(window));
   return (
-    <>
-      <SelectThemingButton />
-      <StyledWindow
-        ref={ref}
-        resizeRef={resizeRef}
-        style={{
-          zIndex: isActive ? 1 : 0,
-          ...(rect ?? {
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: defaultWidth ? "100%" : "auto",
-            maxWidth: defaultWidth ?? "100%",
-            height: defaultHeight ? "100%" : "auto",
-            maxHeight: defaultHeight ?? "100%",
-          }),
-        }}
-        resizable
-        onPointerDown={handlePointerDown}
-      >
+    <StyledWindow
+      ref={ref}
+      resizeRef={resizeRef}
+      style={{
+        zIndex: isActive ? 1 : 0,
+        ...(rect ?? {
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: defaultWidth ? "100%" : "auto",
+          maxWidth: defaultWidth ?? "100%",
+          height: defaultHeight ? "100%" : "auto",
+          maxHeight: defaultHeight ?? "100%",
+        }),
+      }}
+      resizable
+      onPointerDown={handlePointerDown}
+    >
 
-        <WindowHeader
-          active={isActive}
-          css="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: default;"
-          onPointerDown={handleWindowHeaderPointerDown}
-        >
-          <span css="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-right: 4px;">
-            {window}
-          </span>
-          <CloseButton window={window} />
-        </WindowHeader>
-        <WindowContent
-          className={className}
-          css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
-        >
-          {children}
-        </WindowContent>
-      </StyledWindow>
-    </>
+      <WindowHeader
+        active={isActive}
+        css="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: default;"
+        onPointerDown={handleWindowHeaderPointerDown}
+      >
+        <span css="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-right: 4px;">
+          {window}
+        </span>
+        <CloseButton window={window} />
+      </WindowHeader>
+      <WindowContent
+        className={className}
+        css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
+      >
+        <div css="display: flex; justify-content: flex-start; align-items: flex-end; padding-bottom: 10px">
+          <SelectThemingButton />
+        </div>
+        {children}
+      </WindowContent>
+    </StyledWindow>
   );
 });
