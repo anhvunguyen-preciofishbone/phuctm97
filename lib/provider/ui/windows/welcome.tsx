@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
+import type { SelectOption } from "react95/dist/Select/Select.types";
 
 import { Bulb, Faxcover140, Progman24 } from "@react95/icons";
+import { useAtom } from "jotai";
 import { useCallback, useState } from "react";
-import { Anchor, Button, Frame, Separator } from "react95";
+import { Anchor, Button, Frame, Select, Separator } from "react95";
 import { createHatchedBackground, createScrollbars } from "react95/dist/common";
 import styled from "styled-components";
 
+import { themeAtom } from "~/lib/atom";
 import { Window } from "~/lib/window";
 
 const StyledFrame = styled(Frame)`
@@ -13,6 +16,7 @@ const StyledFrame = styled(Frame)`
   flex-shrink: 1;
   padding: 20px;
   margin-right: 20px;
+  max-height: 323px;
   overflow: auto;
   ${({ theme }) =>
     createHatchedBackground({
@@ -235,6 +239,29 @@ function Content({ tab }: ContentProps): ReactNode {
   }
 }
 
+const themeOptions = [
+  { label: "Default", value: "dark" },
+  { label: "Black and white", value: "light" }
+];
+
+function SelectThemingButton(): ReactNode {
+  const [theme, setTheme] = useAtom(themeAtom);
+
+  const handleThemeChange = (selectedOption: SelectOption<string>): void => {
+    setTheme(selectedOption.value as "light" | "dark");
+    localStorage.setItem("theme", selectedOption.value); // Save to localStorage for persistence
+  };
+
+  return (
+    <Select
+      options={themeOptions}
+      onChange={handleThemeChange}
+      value={theme}
+      css="z-index: 2"
+    />
+  );
+}
+
 export function Welcome(): ReactNode {
   const [tab, setTab] = useState<Tab>("aboutWebsite");
   const handleClickAboutWebsite = useCallback(() => {
@@ -247,15 +274,15 @@ export function Welcome(): ReactNode {
     setTab("acknowledgements");
   }, [setTab]);
   return (
-    <Window window="Welcome" defaultWidth={720} defaultHeight={454}>
+    <Window window="Welcome" defaultWidth={720} defaultHeight={454} overflowVisible>
       <h1 css="flex-shrink: 0; font-size: 2rem; line-height: 2.625rem; font-weight: bold;">
         Welcome to @phuctm97
       </h1>
-      <div css="flex-grow: 1; flex-shrink: 1; display: flex; overflow: hidden; margin-top: 10px;">
+      <div css="flex-grow: 1; flex-shrink: 1; display: flex; overflow: visible; margin-top: 10px;">
         <StyledFrame variant="well">
           <Content tab={tab} />
         </StyledFrame>
-        <div css="flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch;">
+        <div css="flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch; position: relative;">
           <Button css="flex-shrink: 0;" onClick={handleClickAboutWebsite}>
             About this Website
           </Button>
@@ -265,7 +292,7 @@ export function Welcome(): ReactNode {
           >
             About the Author
           </Button>
-          <Separator css="flex-shrink: 0; margin-top: 40px; margin-bottom: 20px;" />
+          <Separator css="flex-shrink: 0; margin-top: 10px; margin-bottom: 10px;" />
           <Button css="flex-shrink: 0;" onClick={handleClickAcknowledgements}>
             Acknowledgements
           </Button>
@@ -278,6 +305,8 @@ export function Welcome(): ReactNode {
           >
             X/Twitter ↗
           </Button>
+          <Separator css="flex-shrink: 0; margin-top: 10px; margin-bottom: 10px;" />
+          <SelectThemingButton />
         </div>
       </div>
     </Window>

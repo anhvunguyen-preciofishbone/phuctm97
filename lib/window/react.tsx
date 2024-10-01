@@ -5,10 +5,9 @@ import type {
   PropsWithChildren,
   ReactNode,
 } from "react";
-import type { SelectOption } from "react95/dist/Select/Select.types";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   forwardRef,
   useCallback,
@@ -18,14 +17,12 @@ import {
 } from "react";
 import {
   Button,
-  Select,
   Window as React95Window,
   WindowContent,
   WindowHeader,
 } from "react95";
 import styled from "styled-components";
 
-import { themeAtom } from "~/lib/atom";
 import { setDragVisible } from "~/lib/set-drag-visible";
 import { useNullableState } from "~/lib/use-nullable-state";
 
@@ -92,28 +89,6 @@ function CloseButton({ window }: CloseButtonProps): ReactNode {
       <CloseIcon />
       <VisuallyHidden>Close</VisuallyHidden>
     </Button>
-  );
-}
-
-const themeOptions = [
-  { label: "Default", value: "dark" },
-  { label: "Black and white", value: "light" }
-];
-
-function SelectThemingButton(): ReactNode {
-  const [theme, setTheme] = useAtom(themeAtom);
-
-  const handleThemeChange = (selectedOption: SelectOption<string>): void => {
-    setTheme(selectedOption.value as "light" | "dark");
-    localStorage.setItem("theme", selectedOption.value); // Save to localStorage for persistence
-  };
-
-  return (
-    <Select
-      options={themeOptions}
-      onChange={handleThemeChange}
-      value={theme}
-    />
   );
 }
 
@@ -184,10 +159,11 @@ export type WindowProps = PropsWithChildren<{
   className?: string;
   defaultWidth?: number;
   defaultHeight?: number;
+  overflowVisible?: boolean;
 }>;
 
 export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
-  { window, className, defaultWidth, defaultHeight, children },
+  { window, className, defaultWidth, defaultHeight, children, overflowVisible = false },
   forwardRef,
 ): ReactNode {
   const [element, ref] = useNullableState<HTMLElement>();
@@ -300,6 +276,7 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       resizeRef={resizeRef}
       style={{
         zIndex: isActive ? 1 : 0,
+        overflow: overflowVisible ? "visible" : "hidden",
         ...(rect ?? {
           left: "50%",
           top: "50%",
@@ -326,11 +303,8 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       </WindowHeader>
       <WindowContent
         className={className}
-        css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
+        css={`flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: ${overflowVisible ? "visible" : "hidden"};`}
       >
-        <div css="display: flex; justify-content: flex-start; align-items: flex-end; padding-bottom: 10px">
-          <SelectThemingButton />
-        </div>
         {children}
       </WindowContent>
     </StyledWindow>
