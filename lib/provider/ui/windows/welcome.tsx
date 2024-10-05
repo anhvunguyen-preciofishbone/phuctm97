@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
-import type { SelectOption } from "react95/dist/Select/Select.types";
 
 import { Bulb, Faxcover140, Progman24 } from "@react95/icons";
-import { useAtom } from "jotai";
-import { useCallback, useState } from "react";
-import { Anchor, Button, Frame, Select, Separator } from "react95";
+import { useSetAtom } from "jotai";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Anchor, Button, Frame, MenuList, MenuListItem, Separator } from "react95";
 import { createHatchedBackground, createScrollbars } from "react95/dist/common";
 import styled from "styled-components";
 
@@ -239,26 +238,44 @@ function Content({ tab }: ContentProps): ReactNode {
   }
 }
 
-const themeOptions = [
-  { label: "Default", value: "dark" },
-  { label: "Black and white", value: "light" }
-];
-
 function SelectThemingButton(): ReactNode {
-  const [theme, setTheme] = useAtom(themeAtom);
+  const setTheme = useSetAtom(themeAtom);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleThemeChange = (selectedOption: SelectOption<string>): void => {
-    setTheme(selectedOption.value as "light" | "dark");
-    localStorage.setItem("theme", selectedOption.value); // Save to localStorage for persistence
+  const handleThemeChange = (value: string): void => {
+    setTheme(value as "light" | "dark");
+    localStorage.setItem("theme", value);
+    toggleDropdown();
   };
 
+  const toggleDropdown = (): void => { setIsOpen(!isOpen); };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node))
+        setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <Select
-      options={themeOptions}
-      onChange={handleThemeChange}
-      value={theme}
-      css="z-index: 2"
-    />
+    <div css="display: flex; flex-direction: column;" ref={dropdownRef}>
+      <Button css="flex-shrink: 0;" onClick={toggleDropdown}>
+        Themes 🎨
+      </Button>
+      {
+        isOpen && <MenuList>
+          <MenuListItem onClick={() => { handleThemeChange("dark"); }}>Default</MenuListItem>
+          <MenuListItem onClick={() => { handleThemeChange("light"); }}>Black & White</MenuListItem>
+        </MenuList>
+      }
+    </div>
   );
 }
 
