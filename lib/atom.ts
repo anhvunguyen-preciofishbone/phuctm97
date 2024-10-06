@@ -1,3 +1,8 @@
 import { atom } from "jotai";
 
-export const themeAtom = atom("dark");
+export const valueThemes = {
+    original: "original",
+    blackWhite: "black&white"
+}
+
+export const themeAtom = atom(valueThemes.original);

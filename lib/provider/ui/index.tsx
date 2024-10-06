@@ -8,7 +8,7 @@ import blackAndWhite from "react95/dist/themes/blackAndWhite";
 import originalTheme from "react95/dist/themes/original";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
-import { themeAtom } from "~/lib/atom";
+import { themeAtom, valueThemes } from "~/lib/atom";
 import { i18n } from "~/lib/i18n";
 
 import { Header } from "./header";
@@ -56,7 +56,7 @@ export function UI({ children }: PropsWithChildren): ReactNode {
   }, [setTheme]);
 
   return (
-    <ThemeProvider theme={theme === "light" ? blackAndWhite : originalTheme}>
+    <ThemeProvider theme={theme === valueThemes.blackWhite ? blackAndWhite : originalTheme}>
       <Style />
       <DirectionProvider dir={i18n.dir}>
         <Header />

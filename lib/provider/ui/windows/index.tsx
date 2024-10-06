@@ -9,6 +9,7 @@ import { Community } from "./community";
 import { Exception } from "./exception";
 import { NotFound } from "./not-found";
 import { Notepad } from "./notepad";
+import { Themes } from "./themes";
 import { Welcome } from "./welcome";
 
 interface WindowProps {
@@ -34,6 +35,9 @@ function Window({ window }: WindowProps): ReactNode {
     }
     case "5xx": {
       return <Exception />;
+    }
+    case "Themes": {
+      return <Themes />
     }
   }
 }

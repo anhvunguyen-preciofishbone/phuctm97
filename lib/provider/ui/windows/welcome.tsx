@@ -1,13 +1,11 @@
 import type { ReactNode } from "react";
 
 import { Bulb, Faxcover140, Progman24 } from "@react95/icons";
-import { useSetAtom } from "jotai";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Anchor, Button, Frame, MenuList, MenuListItem, Separator } from "react95";
+import { useCallback, useState } from "react";
+import { Anchor, Button, Frame, Separator } from "react95";
 import { createHatchedBackground, createScrollbars } from "react95/dist/common";
 import styled from "styled-components";
 
-import { themeAtom } from "~/lib/atom";
 import { Window } from "~/lib/window";
 
 const StyledFrame = styled(Frame)`
@@ -238,47 +236,6 @@ function Content({ tab }: ContentProps): ReactNode {
   }
 }
 
-function SelectThemingButton(): ReactNode {
-  const setTheme = useSetAtom(themeAtom);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleThemeChange = (value: string): void => {
-    setTheme(value as "light" | "dark");
-    localStorage.setItem("theme", value);
-    toggleDropdown();
-  };
-
-  const toggleDropdown = (): void => { setIsOpen(!isOpen); };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent): void => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node))
-        setIsOpen(false);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  return (
-    <div css="display: flex; flex-direction: column;" ref={dropdownRef}>
-      <Button css="flex-shrink: 0;" onClick={toggleDropdown}>
-        Themes 🎨
-      </Button>
-      {
-        isOpen && <MenuList>
-          <MenuListItem onClick={() => { handleThemeChange("dark"); }}>Default</MenuListItem>
-          <MenuListItem onClick={() => { handleThemeChange("light"); }}>Black & White</MenuListItem>
-        </MenuList>
-      }
-    </div>
-  );
-}
-
 export function Welcome(): ReactNode {
   const [tab, setTab] = useState<Tab>("aboutWebsite");
   const handleClickAboutWebsite = useCallback(() => {
@@ -323,7 +280,6 @@ export function Welcome(): ReactNode {
             X/Twitter ↗
           </Button>
           <Separator css="flex-shrink: 0; margin-top: 10px; margin-bottom: 10px;" />
-          <SelectThemingButton />
         </div>
       </div>
     </Window>
