@@ -6,10 +6,10 @@ import { openWindowsAtom } from "~/lib/window";
 
 import { ChatGPT } from "./chatgpt";
 import { Community } from "./community";
+import { ControlPanel } from "./control-panel";
 import { Exception } from "./exception";
 import { NotFound } from "./not-found";
 import { Notepad } from "./notepad";
-import { Themes } from "./themes";
 import { Welcome } from "./welcome";
 
 interface WindowProps {
@@ -36,8 +36,8 @@ function Window({ window }: WindowProps): ReactNode {
     case "5xx": {
       return <Exception />;
     }
-    case "Themes": {
-      return <Themes />
+    case "Control Panel": {
+      return <ControlPanel />
     }
   }
 }

@@ -40,10 +40,9 @@ function ConnectedMenuListItem({
     openWindow(window);
   }, [window, openWindow]);
 
-  const title = window === "Themes" ? "Themes 🎨" : window
   return (
     <DropdownMenuItem onSelect={handleSelect} asChild>
-      <StyledMenuListItem>{title}</StyledMenuListItem>
+      <StyledMenuListItem>{window}</StyledMenuListItem>
     </DropdownMenuItem>
   );
 }
@@ -64,7 +63,7 @@ export function StartButton(): ReactNode {
       <DropdownMenuPortal>
         <DropdownMenuContent side="top" asChild>
           <MenuList css="width: 200px;">
-            {["Welcome", "Community", "ChatGPT", "Notepad", "Themes"].map((window) => (
+            {["Welcome", "Community", "ChatGPT", "Notepad", "Control Panel"].map((window) => (
               <ConnectedMenuListItem key={window} window={window} />
             ))}
           </MenuList>

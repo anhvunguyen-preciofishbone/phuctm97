@@ -1,8 +1,6 @@
+import type { Theme } from "react95/dist/types";
+
 import { atom } from "jotai";
+import originalTheme from "react95/dist/themes/original";
 
-export const valueThemes = {
-    original: "original",
-    blackWhite: "black&white"
-}
-
-export const themeAtom = atom(valueThemes.original);
+export const themeAtom = atom<Theme>(originalTheme);

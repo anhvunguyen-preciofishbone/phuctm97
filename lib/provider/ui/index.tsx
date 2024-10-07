@@ -2,13 +2,10 @@ import type { PropsWithChildren, ReactNode } from "react";
 
 import { DirectionProvider } from "@radix-ui/react-direction";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
 import { styleReset } from "react95";
-import blackAndWhite from "react95/dist/themes/blackAndWhite";
-import originalTheme from "react95/dist/themes/original";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
-import { themeAtom, valueThemes } from "~/lib/atom";
+import { themeAtom } from "~/lib/atom";
 import { i18n } from "~/lib/i18n";
 
 import { Header } from "./header";
@@ -46,17 +43,10 @@ const Main = styled.main`
 `;
 
 export function UI({ children }: PropsWithChildren): ReactNode {
-  const [theme, setTheme] = useAtom(themeAtom);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme)
-      setTheme(savedTheme);
-
-  }, [setTheme]);
+  const [theme] = useAtom(themeAtom);
 
   return (
-    <ThemeProvider theme={theme === valueThemes.blackWhite ? blackAndWhite : originalTheme}>
+    <ThemeProvider theme={theme}>
       <Style />
       <DirectionProvider dir={i18n.dir}>
         <Header />
