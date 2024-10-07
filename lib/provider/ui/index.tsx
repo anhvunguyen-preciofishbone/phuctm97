@@ -46,7 +46,7 @@ export function UI({ children }: PropsWithChildren): ReactNode {
   const [theme] = useAtom(themeAtom);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme.value}>
       <Style />
       <DirectionProvider dir={i18n.dir}>
         <Header />
