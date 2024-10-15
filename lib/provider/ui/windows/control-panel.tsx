@@ -52,8 +52,6 @@ export function ControlPanel(): ReactNode {
     const handleThemeChange = (selectedOption: SelectOption<ThemeType>): void => {
         setTheme(themesMap[selectedOption.value]);
         setSelectedTheme(selectedOption.value);
-
-        console.log("Change Theme:", themesMap[selectedOption.value])
     };
 
     return (
