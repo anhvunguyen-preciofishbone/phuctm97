@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { GroupBox, Select } from "react95";
 import { titleCase } from "title-case";
 
-import { themeAtom } from "~/lib/atom";
+import { themeAtom } from "~/lib/theme-atom";
 import { Window } from "~/lib/window";
 
 export function ControlPanel(): ReactNode {

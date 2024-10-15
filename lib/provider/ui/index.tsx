@@ -5,8 +5,8 @@ import { Provider, useAtomValue } from "jotai";
 import { styleReset } from "react95";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
-import { themeAtom } from "~/lib/atom";
 import { i18n } from "~/lib/i18n";
+import { themeAtom } from "~/lib/theme-atom";
 
 import { Header } from "./header";
 import { Windows } from "./windows";
