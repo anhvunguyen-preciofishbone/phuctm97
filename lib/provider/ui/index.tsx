@@ -42,29 +42,24 @@ const Main = styled.main`
   overflow: hidden;
 `;
 
+function Document({ children }: PropsWithChildren): ReactNode {
+  const theme = useAtomValue(themeAtom);
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
+
 export function UI({ children }: PropsWithChildren): ReactNode {
   return (
     <Provider>
-      <Layout>
-        {children}
-      </Layout>
+      <Document>
+        <Style />
+        <DirectionProvider dir={i18n.dir}>
+          <Header />
+          <Main>
+            {children}
+            <Windows />
+          </Main>
+        </DirectionProvider>
+      </Document>
     </Provider>
   );
 }
-
-function Layout({ children }: PropsWithChildren): ReactNode {
-  const theme = useAtomValue(themeAtom);
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Style />
-      <DirectionProvider dir={i18n.dir}>
-        <Header />
-        <Main>
-          {children}
-          <Windows />
-        </Main>
-      </DirectionProvider>
-    </ThemeProvider>
-  );
-};

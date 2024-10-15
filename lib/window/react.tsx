@@ -114,9 +114,9 @@ const StyledWindow = styled(React95Window)`
 function getMaxSize(element: HTMLElement): Pick<Rect, "width" | "height"> {
   return element.parentElement
     ? {
-      width: element.parentElement.clientWidth,
-      height: element.parentElement.clientHeight,
-    }
+        width: element.parentElement.clientWidth,
+        height: element.parentElement.clientHeight,
+      }
     : { width: innerWidth, height: innerHeight };
 }
 
@@ -197,29 +197,29 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       setRect(
         anchor.isResize
           ? {
-            left: anchor.left,
-            top: anchor.top,
-            width: Math.min(
-              Math.max(anchor.width + event.clientX, 100),
-              maxSize.width - anchor.left,
-            ),
-            height: Math.min(
-              Math.max(anchor.height + event.clientY, 100),
-              maxSize.height - anchor.top,
-            ),
-          }
+              left: anchor.left,
+              top: anchor.top,
+              width: Math.min(
+                Math.max(anchor.width + event.clientX, 100),
+                maxSize.width - anchor.left,
+              ),
+              height: Math.min(
+                Math.max(anchor.height + event.clientY, 100),
+                maxSize.height - anchor.top,
+              ),
+            }
           : {
-            left: Math.min(
-              Math.max(anchor.left + event.clientX, 0),
-              maxSize.width - anchor.width,
-            ),
-            top: Math.min(
-              Math.max(anchor.top + event.clientY, 0),
-              maxSize.height - anchor.height,
-            ),
-            width: anchor.width,
-            height: anchor.height,
-          },
+              left: Math.min(
+                Math.max(anchor.left + event.clientX, 0),
+                maxSize.width - anchor.width,
+              ),
+              top: Math.min(
+                Math.max(anchor.top + event.clientY, 0),
+                maxSize.height - anchor.height,
+              ),
+              width: anchor.width,
+              height: anchor.height,
+            },
       );
     };
     const handlePointerUp = (event: PointerEvent): void => {

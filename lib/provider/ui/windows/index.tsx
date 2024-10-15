@@ -31,7 +31,7 @@ function Window({ window }: WindowProps): ReactNode {
       return <Community />;
     }
     case "Control Panel": {
-      return <ControlPanel />
+      return <ControlPanel />;
     }
     case "404": {
       return <NotFound />;
