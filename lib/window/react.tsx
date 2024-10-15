@@ -159,12 +159,10 @@ export type WindowProps = PropsWithChildren<{
   className?: string;
   defaultWidth?: number;
   defaultHeight?: number;
-  overflowVisible?: boolean;
-  widthAuto?: boolean;
 }>;
 
 export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
-  { window, className, defaultWidth, defaultHeight, children, overflowVisible = false, widthAuto = false },
+  { window, className, defaultWidth, defaultHeight, children },
   forwardRef,
 ): ReactNode {
   const [element, ref] = useNullableState<HTMLElement>();
@@ -277,11 +275,7 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       resizeRef={resizeRef}
       style={{
         zIndex: isActive ? 1 : 0,
-        overflow: overflowVisible ? "visible" : "hidden",
-        ...(rect ? {
-          ...rect,
-          width: widthAuto ? "auto" : rect.width,
-        } : {
+        ...(rect ?? {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
@@ -306,7 +300,7 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       </WindowHeader>
       <WindowContent
         className={className}
-        css={`flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: ${overflowVisible ? "visible" : "hidden"};`}
+        css="flex-grow: 1; flex-shrink: 1; display: flex; flex-direction: column; align-items: stretch; overflow: hidden;"
       >
         {children}
       </WindowContent>

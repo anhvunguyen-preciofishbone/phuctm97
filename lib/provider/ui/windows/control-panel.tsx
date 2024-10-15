@@ -5,37 +5,28 @@ import type { Theme } from "react95/dist/types";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { GroupBox, Select } from "react95";
-import styled from "styled-components";
 
 import { themeAtom } from "~/lib/atom";
 import { Window } from "~/lib/window";
 
-type ThemeType = "original" | "blackAndWhite" | "modernDark";
-
-const themeOptions: SelectOption<ThemeType>[] = [
-    { label: "Default", value: "original" },
-    { label: "Black and white", value: "blackAndWhite" },
-    { label: "Modern Dark", value: "modernDark" }
-];
-
-const StyledWindow = styled(Window)`
-  overflow: visible;
-`;
-
 export function ControlPanel(): ReactNode {
     const [theme, setTheme] = useAtom(themeAtom);
-    const [selectedTheme, setSelectedTheme] = useState<ThemeType>("original");
-    const [themesMap, setThemesMap] = useState<Record<ThemeType, Theme>>({} as Record<ThemeType, Theme>);
+    const [selectedTheme, setSelectedTheme] = useState<string>("original");
+    const [themesMap, setThemesMap] = useState<Record<string, Theme>>({} as Record<string, Theme>);
+    const [themeOptions, setThemeOptions] = useState<SelectOption<string>[]>([]);
 
     useEffect(() => {
         const loadThemes = async (): Promise<void> => {
             const themes = await import("react95/dist/themes");
 
-            setThemesMap({
-                original: themes.default.original,
-                blackAndWhite: themes.default.blackAndWhite,
-                modernDark: themes.default.modernDark,
-            });
+            const themeEntries = Object.entries(themes.default);
+            setThemesMap(Object.fromEntries(themeEntries));
+
+            const options = themeEntries.map(([key]) => ({
+                label: key.charAt(0).toUpperCase() + key.slice(1),
+                value: key,
+            }));
+            setThemeOptions(options);
         };
 
         void loadThemes();
@@ -43,27 +34,27 @@ export function ControlPanel(): ReactNode {
 
     useEffect(() => {
         const currentThemeType = Object.keys(themesMap).find(
-            (key) => themesMap[key as ThemeType] === theme
-        ) as ThemeType;
+            (key) => themesMap[key] === theme
+        ) ?? "original";
 
         setSelectedTheme(currentThemeType);
     }, [theme, themesMap]);
 
-    const handleThemeChange = (selectedOption: SelectOption<ThemeType>): void => {
+    const handleThemeChange = (selectedOption: SelectOption<string>): void => {
         setTheme(themesMap[selectedOption.value]);
         setSelectedTheme(selectedOption.value);
     };
 
     return (
-        <StyledWindow window="Control Panel" overflowVisible widthAuto>
-            <GroupBox label="Theme" css={{ zIndex: 100 }}>
+        <Window window="Control Panel" defaultWidth={280} defaultHeight={250}>
+            <GroupBox label="Theme">
                 <Select
                     options={themeOptions}
                     onChange={handleThemeChange}
                     value={selectedTheme}
-                    css="z-index=2"
+                    menuMaxHeight={120}
                 />
             </GroupBox>
-        </StyledWindow>
+        </Window>
     );
 }

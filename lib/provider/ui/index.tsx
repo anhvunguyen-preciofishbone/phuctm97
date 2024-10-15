@@ -45,15 +45,14 @@ const Main = styled.main`
 export function UI({ children }: PropsWithChildren): ReactNode {
   return (
     <Provider>
-      <InnerUI>
+      <Layout>
         {children}
-        <Windows />
-      </InnerUI>
+      </Layout>
     </Provider>
   );
 }
 
-function InnerUI({ children }: PropsWithChildren): ReactNode {
+function Layout({ children }: PropsWithChildren): ReactNode {
   const theme = useAtomValue(themeAtom);
 
   return (
@@ -63,6 +62,7 @@ function InnerUI({ children }: PropsWithChildren): ReactNode {
         <Header />
         <Main>
           {children}
+          <Windows />
         </Main>
       </DirectionProvider>
     </ThemeProvider>
