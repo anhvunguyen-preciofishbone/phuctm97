@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
-import { countAtom } from "~/lib/atom";
 import { openWindowsAtom } from "~/lib/window";
 
 import { ChatGPT } from "./chatgpt";
