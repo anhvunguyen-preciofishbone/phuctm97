@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
+import { countAtom } from "~/lib/atom";
 import { openWindowsAtom } from "~/lib/window";
 
 import { ChatGPT } from "./chatgpt";
@@ -30,14 +31,14 @@ function Window({ window }: WindowProps): ReactNode {
     case "Community": {
       return <Community />;
     }
+    case "Control Panel": {
+      return <ControlPanel />
+    }
     case "404": {
       return <NotFound />;
     }
     case "5xx": {
       return <Exception />;
-    }
-    case "Control Panel": {
-      return <ControlPanel />
     }
   }
 }

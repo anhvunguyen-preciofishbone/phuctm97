@@ -1,7 +1,7 @@
 import type { PropsWithChildren, ReactNode } from "react";
 
 import { DirectionProvider } from "@radix-ui/react-direction";
-import { useAtom } from "jotai";
+import { Provider, useAtomValue } from "jotai";
 import { styleReset } from "react95";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
@@ -43,18 +43,28 @@ const Main = styled.main`
 `;
 
 export function UI({ children }: PropsWithChildren): ReactNode {
-  const [theme] = useAtom(themeAtom);
+  return (
+    <Provider>
+      <InnerUI>
+        {children}
+        <Windows />
+      </InnerUI>
+    </Provider>
+  );
+}
+
+function InnerUI({ children }: PropsWithChildren): ReactNode {
+  const theme = useAtomValue(themeAtom);
 
   return (
-    <ThemeProvider theme={theme.value}>
+    <ThemeProvider theme={theme}>
       <Style />
       <DirectionProvider dir={i18n.dir}>
         <Header />
         <Main>
           {children}
-          <Windows />
         </Main>
       </DirectionProvider>
     </ThemeProvider>
   );
-}
+};

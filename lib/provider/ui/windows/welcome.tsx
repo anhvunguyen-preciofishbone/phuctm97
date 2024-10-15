@@ -13,7 +13,6 @@ const StyledFrame = styled(Frame)`
   flex-shrink: 1;
   padding: 20px;
   margin-right: 20px;
-  max-height: 323px;
   overflow: auto;
   ${({ theme }) =>
     createHatchedBackground({
@@ -248,15 +247,15 @@ export function Welcome(): ReactNode {
     setTab("acknowledgements");
   }, [setTab]);
   return (
-    <Window window="Welcome" defaultWidth={720} defaultHeight={454} overflowVisible>
+    <Window window="Welcome" defaultWidth={720} defaultHeight={454}>
       <h1 css="flex-shrink: 0; font-size: 2rem; line-height: 2.625rem; font-weight: bold;">
         Welcome to @phuctm97
       </h1>
-      <div css="flex-grow: 1; flex-shrink: 1; display: flex; overflow: visible; margin-top: 10px;">
+      <div css="flex-grow: 1; flex-shrink: 1; display: flex; overflow: hidden; margin-top: 10px;">
         <StyledFrame variant="well">
           <Content tab={tab} />
         </StyledFrame>
-        <div css="flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch; position: relative;">
+        <div css="flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch;">
           <Button css="flex-shrink: 0;" onClick={handleClickAboutWebsite}>
             About this Website
           </Button>
@@ -266,7 +265,7 @@ export function Welcome(): ReactNode {
           >
             About the Author
           </Button>
-          <Separator css="flex-shrink: 0; margin-top: 10px; margin-bottom: 10px;" />
+          <Separator css="flex-shrink: 0; margin-top: 40px; margin-bottom: 20px;" />
           <Button css="flex-shrink: 0;" onClick={handleClickAcknowledgements}>
             Acknowledgements
           </Button>
@@ -279,7 +278,6 @@ export function Welcome(): ReactNode {
           >
             X/Twitter ↗
           </Button>
-          <Separator css="flex-shrink: 0; margin-top: 10px; margin-bottom: 10px;" />
         </div>
       </div>
     </Window>

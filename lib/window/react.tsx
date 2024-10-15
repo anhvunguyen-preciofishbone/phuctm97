@@ -29,7 +29,7 @@ import { useNullableState } from "~/lib/use-nullable-state";
 import {
   closeWindowAtom,
   isActiveWindowAtomFamily,
-  openWindowAtom
+  openWindowAtom,
 } from "./jotai";
 
 const CloseIcon = styled.span`
@@ -294,7 +294,6 @@ export const Window = forwardRef<HTMLDivElement, WindowProps>(function Window(
       resizable
       onPointerDown={handlePointerDown}
     >
-
       <WindowHeader
         active={isActive}
         css="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: default;"

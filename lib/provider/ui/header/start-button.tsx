@@ -39,7 +39,6 @@ function ConnectedMenuListItem({
   const handleSelect = useCallback(() => {
     openWindow(window);
   }, [window, openWindow]);
-
   return (
     <DropdownMenuItem onSelect={handleSelect} asChild>
       <StyledMenuListItem>{window}</StyledMenuListItem>
