@@ -1,12 +1,27 @@
 import type { ReactNode } from "react";
 
-import { Bulb, Faxcover140, Progman24 } from "@react95/icons";
+import {
+  Bookmark,
+  Bulb,
+  Confcp102,
+  Faxcover140,
+  Progman24,
+  Ulclient1002,
+} from "@react95/icons";
 import { useCallback, useState } from "react";
 import { Anchor, Button, Frame, Separator } from "react95";
 import { createHatchedBackground, createScrollbars } from "react95/dist/common";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { Window } from "~/lib/window";
+
+const MOBILE_BREAKPOINT = 480;
+
+const mobileStyles = (styles: string): ReturnType<typeof css> => css`
+  @media (max-width: ${MOBILE_BREAKPOINT}px) {
+    ${styles}
+  }
+`;
 
 const StyledFrame = styled(Frame)`
   flex-grow: 1;
@@ -19,7 +34,64 @@ const StyledFrame = styled(Frame)`
       mainColor: theme.tooltip,
       secondaryColor: theme.canvas,
     })};
-  ${createScrollbars()}
+  ${createScrollbars()};
+  ${mobileStyles("margin-right: 0;")}
+`;
+
+const StyledTitle = styled.h1`
+  flex-shrink: 0;
+  font-size: 2rem;
+  line-height: 2.625rem;
+  font-weight: bold;
+
+  ${mobileStyles("font-size: 1.5rem;")}
+`;
+
+const ContentWindow = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  overflow: hidden;
+  margin-top: 10px;
+
+  ${mobileStyles("flex-direction: column;")}
+`;
+
+const ActionButtonsContainer = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  svg {
+    display: none;
+  }
+
+  ${mobileStyles(`
+    flex-direction: row;
+    justify-content: space-between;
+
+    button {
+      margin-top: 0;
+    };
+
+    span {
+      display: none;
+    };
+
+    svg {
+      display: inline-block;
+    }
+  `)}
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  ${mobileStyles(`
+    flex-direction: row;
+  `)}
 `;
 
 function openGithub(): void {
@@ -248,38 +320,57 @@ export function Welcome(): ReactNode {
   }, [setTab]);
   return (
     <Window window="Welcome" defaultWidth={720} defaultHeight={454}>
-      <h1 css="flex-shrink: 0; font-size: 2rem; line-height: 2.625rem; font-weight: bold;">
-        Welcome to @phuctm97
-      </h1>
-      <div css="flex-grow: 1; flex-shrink: 1; display: flex; overflow: hidden; margin-top: 10px;">
+      <StyledTitle>Welcome to @phuctm97</StyledTitle>
+      <ContentWindow>
         <StyledFrame variant="well">
           <Content tab={tab} />
         </StyledFrame>
-        <div css="flex-shrink: 0; display: flex; flex-direction: column; align-items: stretch;">
-          <Button css="flex-shrink: 0;" onClick={handleClickAboutWebsite}>
-            About this Website
-          </Button>
-          <Button
-            css="flex-shrink: 0; margin-top: 10px;"
-            onClick={handleClickAboutAuthor}
-          >
-            About the Author
-          </Button>
-          <Separator css="flex-shrink: 0; margin-top: 40px; margin-bottom: 20px;" />
-          <Button css="flex-shrink: 0;" onClick={handleClickAcknowledgements}>
-            Acknowledgements
-          </Button>
-          <Button css="flex-shrink: 0; margin-top: 10px;" onClick={openGithub}>
-            GitHub ↗
-          </Button>
-          <Button
-            css="flex-shrink: 0; margin-top: 10px;"
-            onClick={openXOrTwitter}
-          >
-            X/Twitter ↗
-          </Button>
-        </div>
-      </div>
+        <ActionButtonsContainer>
+          <ButtonGroup>
+            <Button css="flex-shrink: 0;" onClick={handleClickAboutWebsite}>
+              <span>About this Website</span>
+              <Confcp102 />
+            </Button>
+            <Button
+              css={css`
+                flex-shrink: 0;
+                margin-top: 10px;
+                ${mobileStyles("padding-right: 0;")}
+              `}
+              onClick={handleClickAboutAuthor}
+            >
+              <span>About the Author</span>
+              <Ulclient1002 />
+            </Button>
+            <Separator
+              css={css`
+                flex-shrink: 0;
+                margin-top: 40px;
+                margin-bottom: 20px;
+                ${mobileStyles("display: none;")}
+              `}
+            />
+            <Button css="flex-shrink: 0;" onClick={handleClickAcknowledgements}>
+              <span>Acknowledgements</span>
+              <Bookmark />
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button
+              css="flex-shrink: 0; margin-top: 10px;"
+              onClick={openGithub}
+            >
+              GitHub ↗
+            </Button>
+            <Button
+              css="flex-shrink: 0; margin-top: 10px;"
+              onClick={openXOrTwitter}
+            >
+              X/Twitter ↗
+            </Button>
+          </ButtonGroup>
+        </ActionButtonsContainer>
+      </ContentWindow>
     </Window>
   );
 }
